@@ -1,5 +1,6 @@
 import numpy as np
 import scipy
+from scipy import optimize
 
 def deb(A):
     print(A)
@@ -37,7 +38,7 @@ def termset(A,B,C,K,ymax,ymin,umax,umin):
         for ik in range(nci):
             f = (np.matrix((Hi[ik, :]).dot(Dyn)))
             f = np.transpose(f)
-            OPT = scipy.optimize.linprog(-1*f, A_ub = H0, b_ub=h0, bounds=(None,None), method='revised simplex') 
+            OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0, bounds=(None,0), method='revised simplex') 
             x = OPT.x #the optimal x, dont think this is used any further, might remove it
             fval = OPT.fun #objective func value at minimum
             xlist.append(x)
