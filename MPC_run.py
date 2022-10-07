@@ -17,14 +17,14 @@ zsave = np.zeros((nu, tend))
 tosave = np.zeros((1, tend))
 feasflag = 1
 
-xsave[:,0]= xinit
+xsave[:,0:1]= xinit
 
 f = np.zeros((n*nu, 1))
 
-nc = np.shape(Gz)[1]
-Hinv = np.invert(Hess)
-IGi = np.subtract(np.identity(nc), Gz@Hinv@np.transpose(Gz))
-IGIs = np.sparse(IGi)
+nc = np.shape(Gz)[0]
+Hinv = np.linalg.inv(Hess)
+IGi = np.subtract(np.identity(nc), (Gz.dot(Hinv)).dot(np.transpose(Gz)))
+IGIs = (IGi) #not able to make this sparse yet
 hif = Hinv@f0 
 
 HGz = -Hinv@np.transpose(Gz)
@@ -44,7 +44,7 @@ for i in range(tend):
     ix = 0
 
     Qmat0i = Qsp0y0 = np.subtract(-Sz@x0, Wz)
-
+    y0 = np.subtract(-Sz.dot(x0), Wz)
     while (not (solved)):
 
         ix = ix +1
@@ -55,7 +55,7 @@ for i in range(tend):
             y = y0-y0[iz]@vAd
             y0 = y
         
-        lam = y*actset #elementvis?
+        lam = np.multiply(y,actset) #elementvis?
         i1 = min(lam)
         i1z = np.argmin(lam)
 
@@ -77,9 +77,9 @@ for i in range(tend):
                 iz = []
         
         if (not iz):
-            qu = IGis[:, iz]
-            vA = Qmat0i@qu
-            qdiv = qc+vA[iz]
+            qu = IGIs[:, iz]
+            vA = np.multiply(Qmat0i,qu)
+            qdiv = qc+vA[iz] #her er problemet :)
             vAd = (1/qdiv)@vA
 
             if ((abs(qdiv) < 1*math.e**(-13)) or (abs(qdiv) > 1*math.e**(12))):
