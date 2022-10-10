@@ -22,14 +22,14 @@ xsave[:,0:1]= xinit
 f = np.zeros((n*nu, 1))
 
 nc = np.shape(Gz)[0]
-Hinv = np.linalg.inv(Hess)
+Hinv = np.linalg.inv(Hess) #stemmer
 IGi = np.subtract(np.identity(nc), (Gz.dot(Hinv)).dot(np.transpose(Gz)))
-IGIs = (IGi) #not able to make this sparse yet
-hif = Hinv@f0 
+IGIs = (IGi) #stemmer, but not sparse
+hif = Hinv@f0 #stemmer
 
-HGz = -Hinv@np.transpose(Gz)
-HGzu = HGz[1:nu, :]
-hifu = -hif[1:nu, :]
+HGz = -Hinv@np.transpose(Gz) #stemmer
+HGzu = HGz[0:nu, :]
+hifu = -hif[0:nu, :]
 
 actsets = np.zeros((nc,1))
 Qsp0 = np.identity(nc)
@@ -43,7 +43,8 @@ for i in range(tend):
     izold = 0
     ix = 0
 
-    Qmat0i = Qsp0y0 = np.subtract(-Sz@x0, Wz)
+    Qmat0i = Qsp0
+
     y0 = np.subtract(-Sz.dot(x0), Wz)
     while (not (solved)):
 
@@ -52,7 +53,8 @@ for i in range(tend):
         if (ix == 1): 
             y = y0
         else:
-            y = y0-y0[iz]@vAd
+            q = (y0[iz].item())*vAd
+            y = np.subtract(y0, (y0[iz].item())*vAd) #veldig spess men tar vector minus vector og får matrise??
             y0 = y
         
         lam = np.multiply(y,actset) #elementvis?
@@ -62,26 +64,25 @@ for i in range(tend):
         if (i1>=-10*np.finfo(float).eps):
             i1 = []
 
-        if (not i1):
+        if (i1):
             iz = i1z
             actset[iz] = 0 
             qc = 1
         else:
             i2 = max(y-lam)
             i2z = np.argmax(y-lam)
-            if (not i2):
+            if (i2): 
                 iz = i2z
                 actset[iz] = 1
                 qc = -1
             else:
                 iz = []
         
-        if (not iz):
+        if (iz):
             qu = IGIs[:, iz]
-            vA = np.multiply(Qmat0i,qu)
-            qdiv = qc+vA[iz] #her er problemet :)
-            vAd = (1/qdiv)@vA
-
+            vA = Qmat0i.dot(qu) #vA har like tallverdier som i matlab, men ulik plassering
+            qdiv = qc+vA[iz] #her er problemet :) 
+            vAd = (1/qdiv)*(vA)
             if ((abs(qdiv) < 1*math.e**(-13)) or (abs(qdiv) > 1*math.e**(12))):
 
                 feasflag = 0
@@ -101,15 +102,15 @@ for i in range(tend):
     if (feasflag == 0):
         break
     
-    lam = actset*y #element wise?
+    lam = (actset)*np.transpose(y) #element wise?
 
     u = HGzu@lam+hifu@x0
 
-    x1 = A@x0+B@U
+    x1 = A@x0+B@u
 
     x0 = x1
     xsave[:, ik+1] = x0
-    usave[:, ik] = U
+    usave[:, ik] = u
     tosave[1, ik] = tk 
 
 

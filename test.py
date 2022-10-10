@@ -3,12 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy 
 from scipy import optimize
-import gurobipy as gb
+from scipy.sparse import csr_matrix
+
+
 
 import scipy.sparse as sp
-from gurobipy import GRB
-from pulp import *
-import pandas as pd
+
 
 x = np.linspace(0, 20, 100)  # Create a list of evenly-spaced numbers over the range
                  # Display the plot
@@ -66,9 +66,13 @@ def daug(A, B):
 a = np.array([[9, 2, 3], [1, 2, 3], [2,4,5]])
 b = np.array([[2, 2, 3], [1, 2, 3], [5,8,9]])
 d = np.array([[2, 2, 3], [2, 3, 4]])
-e = np.array([[1, 4, 5, 9]])
+e = np.array([[1], [4], [5]])
 print("a")
 print(a)
 print("d")
 print(d)
 print(daug(d,e))
+A = sp.eye(3)
+F = e.dot(A)
+
+print(5*e)
