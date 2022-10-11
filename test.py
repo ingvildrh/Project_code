@@ -64,15 +64,17 @@ def daug(A, B):
 
 
 a = np.array([[9, 2, 3], [1, 2, 3], [2,4,5]])
-b = np.array([[2, 2, 3], [1, 2, 3], [5,8,9]])
+b = np.matrix([[2, 2, 3], [1, 2, 3], [5,8,9]])
 d = np.array([[2, 2, 3], [2, 3, 4]])
-e = np.array([[1], [4], [5]])
-print("a")
+e = np.zeros((2,5))
+a[0:3, 0] = np.array(([1,4,5]))
 print(a)
-print("d")
-print(d)
-print(daug(d,e))
+print("e")
+print(e)
+g = np.array([1, 1])
+print(g)
+e[:,1] = g
+print(e)
 A = sp.eye(3)
 F = e.dot(A)
 
-print(5*e)

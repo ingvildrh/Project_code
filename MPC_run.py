@@ -54,10 +54,14 @@ for i in range(tend):
             y = y0
         else:
             q = (y0[iz].item())*vAd
-            y = np.subtract(y0, (y0[iz].item())*vAd) #veldig spess men tar vector minus vector og får matrise??
+            print(vAd)
+            y01 = np.squeeze(y0)
+            print(y0)
+            y = np.subtract((y0), (y0[iz].item())*vAd) #veldig spess men tar vector minus vector og får matrise??
             y0 = y
+            print(y0)
         
-        lam = np.multiply(y,actset) #elementvis?
+        lam = np.multiply((y),actset) #elementvis?
         i1 = min(lam)
         i1z = np.argmin(lam)
 
@@ -80,9 +84,10 @@ for i in range(tend):
         
         if (iz):
             qu = IGIs[:, iz]
-            vA = Qmat0i.dot(qu) #vA har like tallverdier som i matlab, men ulik plassering
+            vA = np.transpose(np.matrix(Qmat0i@(qu)))
+            print(vA) #vA har like tallverdier som i matlab, men ulik plassering
             qdiv = qc+vA[iz] #her er problemet :) 
-            vAd = (1/qdiv)*(vA)
+            vAd = np.multiply((1/qdiv),(vA))
             if ((abs(qdiv) < 1*math.e**(-13)) or (abs(qdiv) > 1*math.e**(12))):
 
                 feasflag = 0
@@ -92,7 +97,7 @@ for i in range(tend):
 
                 break
 
-            Qmat1i = np.subtract(Qmat0i, -vAd@Qmat0i[iz,:])
+            Qmat1i = np.subtract(Qmat0i, -vAd@np.matrix(Qmat0i[iz,:]))
             Qmat0i = Qmat1i
 
         else:
@@ -102,16 +107,17 @@ for i in range(tend):
     if (feasflag == 0):
         break
     
-    lam = (actset)*np.transpose(y) #element wise?
+    lam = np.multiply((actset),(y)) #element wise?
 
     u = HGzu@lam+hifu@x0
 
     x1 = A@x0+B@u
 
     x0 = x1
-    xsave[:, ik+1] = x0
-    usave[:, ik] = u
-    tosave[1, ik] = tk 
+    xsave[:, i+1] = np.transpose(x0)
+    usave[:, i] = u
+
+
 
 
 
