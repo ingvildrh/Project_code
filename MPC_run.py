@@ -54,12 +54,9 @@ for i in range(tend):
             y = y0
         else:
             q = (y0[iz].item())*vAd
-            print(vAd)
             y01 = np.squeeze(y0)
-            print(y0)
             y = np.subtract((y0), (y0[iz].item())*vAd) #veldig spess men tar vector minus vector og får matrise??
             y0 = y
-            print(y0)
         
         lam = np.multiply((y),actset) #elementvis?
         i1 = min(lam)
@@ -85,13 +82,12 @@ for i in range(tend):
         if (iz):
             qu = IGIs[:, iz]
             vA = np.transpose(np.matrix(Qmat0i@(qu)))
-            print(vA) #vA har like tallverdier som i matlab, men ulik plassering
-            qdiv = qc+vA[iz] #her er problemet :) 
+            qdiv = qc+vA[iz] 
             vAd = np.multiply((1/qdiv),(vA))
             if ((abs(qdiv) < 1*math.e**(-13)) or (abs(qdiv) > 1*math.e**(12))):
 
                 feasflag = 0
-                print("Infeasible påroblem detected")
+                print("Infeasible problem detected")
 
                 feasflag = False
 
