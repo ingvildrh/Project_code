@@ -8,7 +8,7 @@ def deb(A):
     print(A.shape)
 
 def termset(A,B,C,K,ymax,ymin,umax,umin):
-    #veldig usikker på om deyye gjøres riktig, men har riktige tall ift modell 1
+
     nx = np.shape(A)[0]
     nu = np.shape(B)[1]
     ny = np.shape(C)[0]
@@ -20,7 +20,6 @@ def termset(A,B,C,K,ymax,ymin,umax,umin):
 
     Hi  = np.concatenate((C, -1*C, -1*K, K))
     hi = np.concatenate((ymax, -1*ymin, np.array([[umax], [-1*umin]])))
-    deb(hi)
     nci = hi.shape[0]
 
     ni = 10
@@ -38,7 +37,7 @@ def termset(A,B,C,K,ymax,ymin,umax,umin):
         for ik in range(nci):
             f = (np.matrix((Hi[ik, :]).dot(Dyn)))
             f = np.transpose(f)
-            OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0, bounds=(None,0), method='revised simplex') 
+            OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0) 
             x = OPT.x #the optimal x, dont think this is used any further, might remove it
             fval = OPT.fun #objective func value at minimum
             xlist.append(x)
@@ -52,7 +51,6 @@ def termset(A,B,C,K,ymax,ymin,umax,umin):
             
     
     nc0 = np.shape(H0)[0] #generelt litt usikker på disse med shape
-    deb(h0)
 
     H1 = H0[2*nx+1:nc0, :]
     h1 = h0[2*nx+1:nc0]

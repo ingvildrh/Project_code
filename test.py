@@ -4,15 +4,9 @@ import numpy as np
 import scipy 
 from scipy import optimize
 from scipy.sparse import csr_matrix
-
-
-
 import scipy.sparse as sp
+from scipy.optimize import minimize
 
-
-x = np.linspace(0, 20, 100)  # Create a list of evenly-spaced numbers over the range
-                 # Display the plot
-print("hei")
 '''
 ANS = scipy.optimize.linprog(
     c = [-1, -2], 
@@ -22,16 +16,32 @@ ANS = scipy.optimize.linprog(
     method='highs'
 )
 '''
-f= np.array([[-1, 0]])
+f= np.array([[0, -1]])
 H0 = np.array([[1,0], [0,1 ], [-1,0], [0,-1], [1,0], [0,1]])
 h0=np.array([[1000], [1000], [1000],[1000],[5],[5]])
 h01=np.array([[1000, 1000, 1000,1000,5,5]])
-print("f")
-print(f)
-print("H0")
-print(H0)
-print("h0")
-print(h0)
+OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0) 
+x = OPT.x #the optimal x, dont think this is used any further, might remove it
+fval = OPT.fun 
+print(x)
+print(fval)
+
+fun = lambda x: -1*x[1]
+cons = ({'type': 'ineq', 'fun': lambda x: 1000-x[0]},
+{'type': 'ineq', 'fun': lambda x: 1000-x[1]}, 
+{'type': 'ineq', 'fun': lambda x: 1000+x[0]}, 
+{'type': 'ineq', 'fun': lambda x: 1000+x[1]}, 
+{'type': 'ineq', 'fun': lambda x: 5-x[0]},
+{'type': 'ineq', 'fun': lambda x: 5-x[1]})
+sol = minimize(fun, (0,0), method = 'SLSQP', constraints=cons)
+print(sol.x)
+
+
+
+
+
+
+
 
 # Q = np.array([[-1], [0]])
 # A = np.array([[1,0], [0,1 ], [-1,0], [0,-1], [1,0], [0,1]])
@@ -47,34 +57,39 @@ print(h0)
 # print('Obj: %g' % m.ObjVal)
 
 
-OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0, bounds=(None, 0), method='highs-ds') 
-print(OPT.fun)
-print(OPT.x)
-print(OPT.success)
+# OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0, bounds=(None, 0), method='highs-ds') 
+# print(OPT.fun)
+# print(OPT.x)
+# print(OPT.success)
 
-def daug(A, B):
-    Am = np.shape(A)[0]
-    An = np.shape(A)[1]
-    Bm = np.shape(B)[0]
-    Bn = np.shape(B)[1]
-    C = np.zeros((Am+Bm, An+Bn))
-    C[0:Am, 0:An]=A
-    C[Am:Am+Bm, An:An+Bn]=B
-    return C
+# def daug(A, B):
+#     Am = np.shape(A)[0]
+#     An = np.shape(A)[1]
+#     Bm = np.shape(B)[0]
+#     Bn = np.shape(B)[1]
+#     C = np.zeros((Am+Bm, An+Bn))
+#     C[0:Am, 0:An]=A
+#     C[Am:Am+Bm, An:An+Bn]=B
+#     return C
 
 
-a = np.array([[9, 2, 3], [1, 2, 3], [2,4,5]])
-b = np.matrix([[2, 2, 3], [1, 2, 3], [5,8,9]])
-d = np.array([[2, 2, 3], [2, 3, 4]])
-e = np.zeros((2,5))
-a[0:3, 0] = np.array(([1,4,5]))
-print(a)
-print("e")
-print(e)
-g = np.array([1, 1])
-print(g)
-e[:,1] = g
-print(e)
-A = sp.eye(3)
-F = e.dot(A)
+# a = np.array([[9, 2, 3], [1, 2, 3], [2,4,5]])
+# b = np.matrix([[2, 2, 3], [1, 2, 3], [5,8,9]])
+# d = np.array([[2, 2, 3], [2, 3, 4]])
+# e = np.zeros((2,5))
+# a[0:3, 0] = np.array(([1,4,5]))
+# print(a)
+# print("e")
+# print(e)
+# g = np.array([1, 1])
+# print(g)
+# e[:,1] = g
+# print(e)
+# A = sp.eye(3)
+# F = e.dot(A)
+
+o = np.zeros((1, 5))
+o[0,4] = 8
+print(o)
+
 

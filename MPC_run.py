@@ -2,6 +2,8 @@ from re import U
 import numpy as np
 from MPC_setup import * 
 import math as math
+import time
+import daug
 
 tend = 100
 
@@ -36,6 +38,7 @@ Qsp0 = np.identity(nc)
 
 
 for i in range(tend):
+    start = time.process_time()
     feasflag = False
 
     actset = actsets
@@ -99,7 +102,7 @@ for i in range(tend):
         else:
             solved = True
             feasflag = True
-        
+    tk = time.process_time() - start    
     if (feasflag == 0):
         break
     
@@ -112,6 +115,8 @@ for i in range(tend):
     x0 = x1
     xsave[:, i+1] = np.transpose(x0)
     usave[:, i] = u
+    tosave[0, i] = tk
+print(tosave)
 
 
 
