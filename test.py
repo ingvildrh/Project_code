@@ -1,3 +1,4 @@
+from datetime import datetime
 from math import inf
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,6 +7,8 @@ from scipy import optimize
 from scipy.sparse import csr_matrix
 import scipy.sparse as sp
 from scipy.optimize import minimize
+import time
+import datetime
 
 '''
 ANS = scipy.optimize.linprog(
@@ -16,25 +19,41 @@ ANS = scipy.optimize.linprog(
     method='highs'
 )
 '''
-f= np.array([[0, -1]])
-H0 = np.array([[1,0], [0,1 ], [-1,0], [0,-1], [1,0], [0,1]])
-h0=np.array([[1000], [1000], [1000],[1000],[5],[5]])
-h01=np.array([[1000, 1000, 1000,1000,5,5]])
-OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0) 
-x = OPT.x #the optimal x, dont think this is used any further, might remove it
-fval = OPT.fun 
-print(x)
-print(fval)
+start = time.process_time()
+start1 = datetime.datetime.now()
 
-fun = lambda x: -1*x[1]
-cons = ({'type': 'ineq', 'fun': lambda x: 1000-x[0]},
-{'type': 'ineq', 'fun': lambda x: 1000-x[1]}, 
-{'type': 'ineq', 'fun': lambda x: 1000+x[0]}, 
-{'type': 'ineq', 'fun': lambda x: 1000+x[1]}, 
-{'type': 'ineq', 'fun': lambda x: 5-x[0]},
-{'type': 'ineq', 'fun': lambda x: 5-x[1]})
-sol = minimize(fun, (0,0), method = 'SLSQP', constraints=cons)
-print(sol.x)
+i = 1000000
+while (i != 0):
+    i = i-1
+
+
+#tk = time.process_time() - start 
+tk1 = datetime.datetime.now()-start1
+
+#print(tk)
+print(tk1)
+
+
+
+# f= np.array([[0, -1]])
+# H0 = np.array([[1,0], [0,1 ], [-1,0], [0,-1], [1,0], [0,1]])
+# h0=np.array([[1000], [1000], [1000],[1000],[5],[5]])
+# h01=np.array([[1000, 1000, 1000,1000,5,5]])
+# OPT = optimize.linprog(-1*f, A_ub = H0, b_ub=h0) 
+# x = OPT.x #the optimal x, dont think this is used any further, might remove it
+# fval = OPT.fun 
+# print(x)
+# print(fval)
+
+# fun = lambda x: -1*x[1]
+# cons = ({'type': 'ineq', 'fun': lambda x: 1000-x[0]},
+# {'type': 'ineq', 'fun': lambda x: 1000-x[1]}, 
+# {'type': 'ineq', 'fun': lambda x: 1000+x[0]}, 
+# {'type': 'ineq', 'fun': lambda x: 1000+x[1]}, 
+# {'type': 'ineq', 'fun': lambda x: 5-x[0]},
+# {'type': 'ineq', 'fun': lambda x: 5-x[1]})
+# sol = minimize(fun, (0,0), method = 'SLSQP', constraints=cons)
+# print(sol.x)
 
 
 
@@ -88,8 +107,6 @@ print(sol.x)
 # A = sp.eye(3)
 # F = e.dot(A)
 
-o = np.zeros((1, 5))
-o[0,4] = 8
-print(o)
+
 
 

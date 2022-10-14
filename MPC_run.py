@@ -4,6 +4,8 @@ from MPC_setup import *
 import math as math
 import time
 import daug
+import datetime
+import scipy.io
 
 tend = 100
 
@@ -38,7 +40,7 @@ Qsp0 = np.identity(nc)
 
 
 for i in range(tend):
-    start = time.process_time()
+    start = datetime.datetime.now()
     feasflag = False
 
     actset = actsets
@@ -102,7 +104,7 @@ for i in range(tend):
         else:
             solved = True
             feasflag = True
-    tk = time.process_time() - start    
+    tk = datetime.datetime.now() - start 
     if (feasflag == 0):
         break
     
@@ -115,8 +117,8 @@ for i in range(tend):
     x0 = x1
     xsave[:, i+1] = np.transpose(x0)
     usave[:, i] = u
-    tosave[0, i] = tk
-print(tosave)
+    tosave[0, i] = tk.microseconds
+
 
 
 
