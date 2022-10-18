@@ -1,0 +1,6 @@
+
+
+fileID = fopen('execution_time.txt', 'r');
+formatSpec = '%c';
+A = fscanf(fileID,formatSpec);
+B = readmatrix('execution_time.txt');

@@ -3,20 +3,14 @@ from MPC_run import *
 import matplotlib.pyplot as plt
 
 exe_time = np.matrix(tosave)
+mlist = []
+#as matlab returned NaN when reading the first and last number, I add a buffer in both ends
+mlist.append("buff1")
 
-time_arr = exe_time
-for i in range(tend):
-    exe_time[0, i] = i
+for i in range(100):
+   mlist.append(exe_time[0, i])
 
+mlist.append("buff2")
 
-fig, ax = plt.subplots()
-ax.plot(exe_time, time_arr, 'b-', linewidth=2)
-ax.set_title('Python Execution time')
-ax.set_ylabel('Execution time [micro seconds]')
-ax.set_xlabel('Step')
-
-#ylim(min(cars,trucks),max(cars,trucks))
-# Create a legend
-ax.legend(['time', 'steps'], loc = 'best')
-
-plt.show()
+file = open("execution_time.txt", "w")
+file.write(str((mlist)))

@@ -120,6 +120,9 @@ for i in range(tend):
     tosave[0, i] = tk.microseconds
 
 
+print(tosave)
+
+
 
 
 
