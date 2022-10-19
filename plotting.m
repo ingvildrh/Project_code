@@ -1,19 +1,16 @@
+format long
 
-
-fileID = fopen('execution_time.txt', 'r');
-formatSpec = '%c';
-A = fscanf(fileID,formatSpec);
 B = readmatrix('execution_time.txt');
 python_times = B
 python_times = python_times(2:101)./1000000
 
 
-f = figure("Name", "myfig")
+f = figure("Name", "myfig");
 plot(python_times);
 hold on;
 plot(tosave);
 hold off;
-legend('python','matlab')
+legend('Python','Matlab')
 title('Execution time');
 ylabel('time [seconds]')
 xlabel('step')

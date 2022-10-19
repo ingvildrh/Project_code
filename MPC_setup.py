@@ -9,7 +9,7 @@ def deb(A):
     print("dimention:")
     print(A.shape)
 
-MODEL = 1
+MODEL = 2
 
 
 
@@ -34,6 +34,28 @@ if (MODEL == 1):
 
     sys = ss(A,B,C,0,1)
 
+if (MODEL == 2):
+    #4-state example from paper with Florin, example 2
+    A = np.array([[0.928, 0.002, -0.003, -0.004], [0.041, 0.954, 0.012, 0.006], [-0.052, -0.046, 0.893, -0.003], [-0.069, 0.051, 0.032, 0.935]])
+    B = np.array([[0, 0.336], [0.183, 0.007], [0.090,  -0.009], [0.042, 0.012]])  
+    C = np.array([[0, 0, -0.098, 0.269], [0, 0, 0.080, 0.327]])
+
+    nx = 4
+    ny = 2
+    nu = 2
+    n = 30
+
+    sys = ss(A,B,C,0,1); #creating state space model
+
+    qy = np.identity(2)
+    Q = (C.transpose()).dot(qy).dot(C)
+    R = np.identity(nu)
+
+    umin = np.array([[-1], [-1]])
+    umax = np.array([[1], [1]])
+    ymin = np.array([[-1], [-1]]) 
+    ymax = np.array([[1], [1]])
+    
 
 K, S, E = lqr(sys, Q, R) #stusser litt på at E ikke er identisk med matlab, men tror ikke det er av betydning
 
@@ -53,8 +75,12 @@ hy = np.concatenate((hy, np.kron(np.ones((n-1,1)),-1*ymin)))
 #Hh, hn = termset(A,B,C,K,ymax,ymin,umax,umin)
 #Dette er en hardkodet work-around som leser fra txt.fil generert i matlab og flyttet 
 #manuelt til rett mappe
-Hn = np.genfromtxt('A.txt')
-hn = (np.genfromtxt('B.txt'))
+if (MODEL == 1):
+    Hn = np.genfromtxt('A.txt') 
+    hn = (np.genfromtxt('B.txt'))
+if (MODEL == 2):
+    Hn = np.genfromtxt('A2.txt') 
+    hn = (np.genfromtxt('B2.txt'))
 hn = np.transpose(np.matrix(hn))
 
 Hy = daug(Hy, Hn)

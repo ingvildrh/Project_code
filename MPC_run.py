@@ -12,6 +12,8 @@ tend = 100
 if (MODEL == 1):
     xinit = np.matrix([[5], [-2]])
     xinit = np.matrix([[-6], [1.1]])
+if (MODEL == 2):
+    xinit = np.matrix([[25.5724],[25.3546],[9.7892],[0.2448]])
 
 x0 = xinit
 
@@ -37,6 +39,8 @@ hifu = -hif[0:nu, :]
 
 actsets = np.zeros((nc,1))
 Qsp0 = np.identity(nc)
+print(np.shape(Qsp0))
+print(Qsp0[313, 314])
 
 
 for i in range(tend):
@@ -49,6 +53,8 @@ for i in range(tend):
     ix = 0
 
     Qmat0i = Qsp0
+    ylist = []
+    vAdlist = []
 
     y0 = np.subtract(-Sz.dot(x0), Wz)
     while (not (solved)):
@@ -60,7 +66,7 @@ for i in range(tend):
         else:
             q = (y0[iz].item())*vAd
             y01 = np.squeeze(y0)
-            y = np.subtract((y0), (y0[iz].item())*vAd) #veldig spess men tar vector minus vector og får matrise??
+            y = np.subtract((y0), (y0[iz].item())*vAd)
             y0 = y
         
         lam = np.multiply((y),actset) #elementvis?
@@ -75,6 +81,8 @@ for i in range(tend):
             actset[iz] = 0 
             qc = 1
         else:
+            O = y-lam 
+            O2 = np.subtract(y, lam)
             i2 = max(y-lam)
             i2z = np.argmax(y-lam)
             if (i2): 
@@ -98,7 +106,7 @@ for i in range(tend):
 
                 break
 
-            Qmat1i = np.subtract(Qmat0i, -vAd@np.matrix(Qmat0i[iz,:]))
+            Qmat1i = np.subtract(Qmat0i, vAd@np.matrix(Qmat0i[iz,:]))
             Qmat0i = Qmat1i
 
         else:
