@@ -39,8 +39,7 @@ hifu = -hif[0:nu, :]
 
 actsets = np.zeros((nc,1))
 Qsp0 = np.identity(nc)
-print(np.shape(Qsp0))
-print(Qsp0[313, 314])
+
 
 
 for i in range(tend):
@@ -106,7 +105,8 @@ for i in range(tend):
 
                 break
 
-            Qmat1i = np.subtract(Qmat0i, vAd@np.matrix(Qmat0i[iz,:]))
+            #Qmat1i = np.subtract(Qmat0i, vAd@np.matrix(Qmat0i[iz,:]))
+            Qmat1i = np.subtract(Qmat0i, -vAd@np.matrix(Qmat0i[iz,:]))
             Qmat0i = Qmat1i
 
         else:
@@ -119,12 +119,11 @@ for i in range(tend):
     lam = np.multiply((actset),(y)) #element wise?
 
     u = HGzu@lam+hifu@x0
-
     x1 = A@x0+B@u
 
     x0 = x1
     xsave[:, i+1] = np.transpose(x0)
-    usave[:, i] = u
+    usave[:, i] = np.transpose(u)
     tosave[0, i] = tk.microseconds
 
 

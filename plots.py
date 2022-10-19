@@ -12,5 +12,10 @@ for i in range(100):
 
 mlist.append("buff2")
 
-file = open("execution_time.txt", "w")
-file.write(str((mlist)))
+if (MODEL == 1):
+    file = open("execution_timeM1.txt", "w")
+    file.write(str((mlist)))
+
+if (MODEL == 2):
+    file = open("execution_timeM2.txt", "w")
+    file.write(str((mlist)))
